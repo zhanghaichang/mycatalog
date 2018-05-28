@@ -1,19 +1,22 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "myapp.fullname" . }}
+  name: {{ .Values.service.name }}
   labels:
-    app: {{ template "myapp.name" . }}
-    chart: {{ template "myapp.chart" . }}
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.externalPort }}
+      targetPort: {{ .Values.service.internalPort }}
       protocol: TCP
-      name: http
+      name: {{ .Values.service.name }}
+{{- if not (empty .Values.service.nodePort) }}
+      nodePort: {{ .Values.service.nodePort }}
+{{- end }}
   selector:
-    app: {{ template "myapp.name" . }}
+    app: {{ template "name" . }}
     release: {{ .Release.Name }}
