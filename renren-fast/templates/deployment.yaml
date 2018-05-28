@@ -1,51 +1,95 @@
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "myapp.fullname" . }}
+  name: {{ template "fullname" . }}
   labels:
-    app: {{ template "myapp.name" . }}
-    chart: {{ template "myapp.chart" . }}
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      app: {{ template "myapp.name" . }}
-      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "myapp.name" . }}
+        app: {{ template "name" . }}
         release: {{ .Release.Name }}
     spec:
+      volumes:
+{{- $fileconfig := .Values.fileConfig -}}
+{{- if not (empty $fileconfig) }}
+      - name: volume-file-config
+        configMap:
+          name: {{ .Values.service.name }}.file.config
+          defaultMode: 420
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: SERVICE_NAME
+            value: {{ .Values.service.name }}
+          - name: SERVICE_TAGS
+            value: urlprefix-{{ .Values.service.name }}.{{ .Values.fabio.name }}.k8.com/
+          - name: SERVICE_{{ .Values.service.internalPort }}_CHECK_HTTP
+            value: {{ .Values.readinessProbe.httpGet.path | quote }}
+          - name: SERVICE_{{ .Values.service.internalPort }}_CHECK_INTERVAL
+            value: "{{ .Values.livenessProbe.config.periodSeconds }}s"
+          - name: SERVICE_{{ .Values.service.internalPort }}_CHECK_TIME
+            value: "{{ .Values.livenessProbe.config.timeoutSeconds }}s"
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: ZookeeperCluster
+            valueFrom:
+              configMapKeyRef:
+                name: default-env.config
+                key: ZookeeperCluster
+                optional: true
+{{- $servicename := .Values.service.name -}}
+{{- range .Values.config }}
+          - name: {{ . }}
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $servicename }}.config
+                key: {{ . }}
+{{- end }}
+{{- range $name, $value := .Values.env }}
+{{- if not (empty $value) }}
+          - name: {{ $name | quote }}
+            value: {{ $value | quote }}
+{{- end }}
+{{- end }}
           ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
+            - containerPort: {{ .Values.service.internalPort }}
           livenessProbe:
+{{ toYaml .Values.livenessProbe.config | indent 12 }}
             httpGet:
-              path: /
-              port: http
+{{ toYaml .Values.livenessProbe.httpGet | indent 14 }}
+              port: {{ .Values.service.internalPort }}     
           readinessProbe:
+{{ toYaml .Values.readinessProbe.config | indent 12 }}
             httpGet:
-              path: /
-              port: http
+{{ toYaml .Values.readinessProbe.httpGet | indent 14 }}
+              port: {{ .Values.service.internalPort }}    
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
+          volumeMounts:
+{{- if not (empty $fileconfig) }}
+          - name: volume-file-config
+            mountPath: {{ $fileconfig }}
+{{- end }}
+    {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
