@@ -189,7 +189,7 @@ Persistence:
 
   Annotations: {}
   AccessMode: ReadWriteOnce
-  Size: 8Gi
+  Size: 5Gi
   volumes:
   #  - name: nothing
   #    emptyDir: {}
