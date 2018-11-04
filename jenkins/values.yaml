@@ -12,13 +12,13 @@ Master:
   Name: jenkins-master
   Image: "jenkins/jenkins"
   ImageTag: "lts"
-  ImagePullPolicy: "Always"
+  ImagePullPolicy: "IfNotPresent"
 # ImagePullSecret: jenkins
   Component: "jenkins-master"
   UseSecurity: true
   HostNetworking: false
   AdminUser: admin
-  # AdminPassword: <defaults to random>
+  AdminPassword: admin
   resources:
     requests:
       cpu: "50m"
@@ -207,7 +207,7 @@ NetworkPolicy:
 
 ## Install Default RBAC roles and bindings
 rbac:
-  install: false
+  install: true
   serviceAccountName: default
   # Role reference
   roleRef: cluster-admin
