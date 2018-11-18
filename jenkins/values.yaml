@@ -26,7 +26,6 @@ Master:
     limits:
       cpu: "1000m"
       memory: "1600Mi"
-  JavaOpts： "-Xms512m -Xmx1g -Duser.timezone=Asia/Shanghai"
   # Environment variables that get added to the init container (useful for e.g. http_proxy)
   # InitContainerEnv:
   #   - name: http_proxy
@@ -35,7 +34,7 @@ Master:
   #   - name: http_proxy
   #     value: "http://192.168.64.1:3128"
   # Set min/max heap here if needed with:
-  # JavaOpts: "-Xms512m -Xmx512m"
+  JavaOpts: "-Xms512m -Xmx1g -Duser.timezone=Asia/Shanghai"
   # JenkinsOpts: ""
   # If you set this prefix and use ingress controller then you might want to set the ingress path below
   # JenkinsUriPrefix: "/jenkins"
