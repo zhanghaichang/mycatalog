@@ -21,11 +21,11 @@ Master:
   AdminPassword: admin
   resources:
     requests:
-      cpu: "50m"
-      memory: "256Mi"
+      cpu: "500m"
+      memory: "512Mi"
     limits:
-      cpu: "2000m"
-      memory: "2048Mi"
+      cpu: "1000m"
+      memory: "1024Mi"
   # Environment variables that get added to the init container (useful for e.g. http_proxy)
   # InitContainerEnv:
   #   - name: http_proxy
@@ -47,13 +47,13 @@ Master:
   ServicePort: 8080
   # For minikube, set this to NodePort, elsewhere use LoadBalancer
   # Use ClusterIP if your setup includes ingress controller
-  ServiceType: LoadBalancer
+  ServiceType: NodePort
   # Master Service annotations
   ServiceAnnotations: {}
   #   service.beta.kubernetes.io/aws-load-balancer-backend-protocol: https
   # Used to create Ingress record (should used with ServiceType: ClusterIP)
   # HostName: jenkins.cluster.local
-  # NodePort: <to set explicitly, choose port between 30000-32767
+  NodePort: 30000
   # Enable Kubernetes Liveness and Readiness Probes
   # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. Set ReadinessTimeout to be shorter than LivenessTimeout.
   HealthProbes: true
@@ -152,7 +152,7 @@ Agent:
       cpu: "200m"
       memory: "512Mi"
     limits:
-      cpu: "200m"
+      cpu: "2000m"
       memory: "512Mi"
   # You may want to change this to true while testing a new image
   AlwaysPullImage: false
@@ -176,7 +176,7 @@ Persistence:
   ## A manually managed Persistent Volume and Claim
   ## Requires Persistence.Enabled: true
   ## If defined, PVC must be created manually before volume will be bound
-  # ExistingClaim:
+  ExistingClaim: jenkins-nfs
 
   ## jenkins data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -189,7 +189,7 @@ Persistence:
 
   Annotations: {}
   AccessMode: ReadWriteOnce
-  Size: 5Gi
+  Size: 8Gi
   volumes:
   #  - name: nothing
   #    emptyDir: {}
