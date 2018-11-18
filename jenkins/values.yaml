@@ -25,7 +25,8 @@ Master:
       memory: "512Mi"
     limits:
       cpu: "1000m"
-      memory: "1024Mi"
+      memory: "1600Mi"
+  JavaOpts： "-Xms512m -Xmx1g -Duser.timezone=Asia/Shanghai"
   # Environment variables that get added to the init container (useful for e.g. http_proxy)
   # InitContainerEnv:
   #   - name: http_proxy
