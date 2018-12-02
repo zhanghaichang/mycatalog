@@ -7,7 +7,7 @@ Apollo helm is a helm chart for [Apollo](https://github.com/ctripcorp/apollo)(Co
 ```
 $ git clone https://github.com/qct/apollo-helm.git
 $ cd apollo-helm
-$ helm install --name my-release .
+$ helm install --name apollo .
 ```
 
 ### Introduction
@@ -17,15 +17,15 @@ This chart bootstraps an Apollo deployment on a Kubernetes cluster using the Hel
 * PV support on underlying infrastructure (if persistence is required)
 
 ### Installing the Chart
-To install the chart with the release name my-release:
+To install the chart with the release name apollo:
 ```
-$ helm install --name my-release .
+$ helm install --name apollo .
 ```
 
 ### Uninstalling the Chart
-To uninstall/delete the my-release deployment:
+To uninstall/delete the apollo deployment:
 ```
-$ helm delete my-release
+$ helm delete apollo
 ```
 The command removes nearly all the Kubernetes components associated with the chart and deletes the release.
 
