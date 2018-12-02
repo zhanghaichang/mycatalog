@@ -7,7 +7,7 @@ Apollo helm is a helm chart for [Apollo](https://github.com/ctripcorp/apollo)(Co
 ```
 $ git clone https://github.com/qct/apollo-helm.git
 $ cd apollo-helm
-$ helm install --name apollo .
+$ helm install --name apollo . --namespace apollo
 ```
 
 ### Introduction
@@ -19,7 +19,7 @@ This chart bootstraps an Apollo deployment on a Kubernetes cluster using the Hel
 ### Installing the Chart
 To install the chart with the release name apollo:
 ```
-$ helm install --name apollo .
+$ helm install --name apollo . --namespace apollo
 ```
 
 ### Uninstalling the Chart
