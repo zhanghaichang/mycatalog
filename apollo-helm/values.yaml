@@ -746,7 +746,7 @@ devconfigservicemysql:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "-"
+    storageClass: "nfs-client"
     accessMode: ReadWriteOnce
     size: 2Gi
     annotations: {}
@@ -1550,7 +1550,7 @@ uatconfigservicemysql:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "-"
+    storageClass: "nfs-client"
     accessMode: ReadWriteOnce
     size: 2Gi
     annotations: {}
@@ -2352,7 +2352,7 @@ portalmysql:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "-"
+    storageClass: "nfs-client"
     accessMode: ReadWriteOnce
     size: 2Gi
     annotations: {}
