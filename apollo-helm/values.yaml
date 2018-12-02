@@ -709,7 +709,7 @@ portal:
     servicePort: 8070
 
   ingress:
-    enabled: false
+    enabled: true
     ## Portal server Ingress annotations
     ##
     annotations: {}
