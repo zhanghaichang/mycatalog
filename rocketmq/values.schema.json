@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "persistence": {
+      "type": "object",
+      "title": "Data Persistence",
+      "form": true,
+      "properties": {
+        "size": {
+          "type": "string",
+          "title": "Persistent Volume Size",
+          "form": true,
+          "render": "slider",
+          "sliderMin": 1,
+          "sliderMax": 100,
+          "sliderUnit": "Gi"
+        }
+      }
+    },
+    "brokerIp": {
+      "type": "string",
+      "title": "Broker IP",
+      "form": true,
+      "regex": "^[1-9][0-9]{1-2}\\.[1-9][0-9]{0,2}\\.[1-9][0-9]{0,2}$"
+    }
+  },
+  "required": ["persistence"]
+}
